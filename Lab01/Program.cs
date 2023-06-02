@@ -1,75 +1,151 @@
-﻿// prompt user for integer n, which serves as array length of word list
-int n = 0;
+﻿// ---------- LABORATORIO 02 - DEYNNI ALMAZAN ---------------------------------
 
-while (n <= 0)
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+
+/*1. A program that produces an array of all of the characters that appear 
+ * more than once in a string.For example, the string “Programmatic Python”
+ * would result in the array ['p','r','o','a','m','t']. */
+
+string inputString = "Programmatic Python";
+
+char[] GetRepeatedCharacters(string input)
 {
-    // Form validation
-    Console.WriteLine("Please enter integer value greater than zero.");
-    n = Int32.Parse(Console.ReadLine()); //Parse is not type safe
-}
+    HashSet<char> uniqueCharacters = new HashSet<char>(); //HashSet create a collection of unique data
+    HashSet<char> repeatedCharacters = new HashSet<char>();
 
-string[] words = new string[n]; // get console entered amount
-//I add the question mark after string to ensure that it has a value, its not empty
-
-for (int i = 0; i < n; i++)
-{
-    Console.WriteLine($"Enter word {i + 1}");
-    string newWord = Console.ReadLine();
-
-    if (newWord.Length > 0 && !newWord.Contains(' '))
+    for (int i = 0; i < input.Length; i++)
     {
-        words[i] = newWord.ToLower();
-    }
-    else
-    {
-        Console.WriteLine("Sorry but you must enter at least one character.");
-        i--;
-    }
-}
+        char c = char.ToLower(input[i]);
 
-char charToCount = ' ';
-
-while (!Char.IsLetter(charToCount))
-{
-    Console.WriteLine("Please, enter a character to count.");
-    charToCount = Char.ToLower(Console.ReadKey().KeyChar);
-}
-
-
-//keyInfo shows all information/methods about an object
-ConsoleKeyInfo keyInfo = Console.ReadKey();
-
-
-Console.WriteLine($"\nYou entered the character '{charToCount}'");
-
-// get a count of how many times this character appears in all of the words
-
-int charCount = 0;
-int totalCount = 0;
-
-foreach (string word in words)
-{
-    char[] chars = word.ToCharArray();// passs the array word in a char array
-
-    foreach (char c in chars) //check if each character is the same character entered by the user
-    {
-        if (Char.ToLower(c) == Char.ToLower(charToCount))
+        if (!uniqueCharacters.Contains(c))
         {
-            charCount++;
+            uniqueCharacters.Add(c);
         }
-        totalCount++;
+        else if (!repeatedCharacters.Contains(c))
+        {
+            repeatedCharacters.Add(c);
+        }
     }
+
+    return repeatedCharacters.ToArray();
 }
 
+Console.WriteLine("Exercise #1");
+Console.Write("Repeated characters: [ ");
+char[] repeatedCharacters = GetRepeatedCharacters(inputString);
+Console.Write(string.Join(", ", repeatedCharacters));
+Console.Write(" ]");
 
-//print the number of occurrences of that character within all of the strings provided.
-if ((charCount * 100) / totalCount > 25)
+
+/* 2. A program returns an array of strings that are unique words found in the argument.
+ * For example, the string “To be or not to be” returns ["to","be","or","not"].*/
+
+
+string inputString2 = "To be or not to be";
+string[] GetUniqueWords(string input)
 {
-    Console.WriteLine($"The letter {charToCount} appears {charCount} times in the array. " +
-        $"This letter makes up more than 25% of the total number of characters.");
+    List<string> words = new List<string>();
+    StringBuilder currentWord = new StringBuilder();
+
+    for (int i = 0; i < input.Length; i++)
+    {
+        char c = input[i];
+
+        if (char.IsLetter(c))
+        {
+            currentWord.Append(c);
+        }
+        else if (currentWord.Length > 0)
+        {
+            words.Add(currentWord.ToString());
+            currentWord.Clear();
+        }
+    }
+
+    if (currentWord.Length > 0)
+    {
+        words.Add(currentWord.ToString());
+    }
+
+    return words.Distinct().ToArray();
 }
-else
+
+string[] uniqueWords = GetUniqueWords(inputString2.ToLower());
+
+Console.WriteLine("");
+Console.WriteLine("\nExercise #2");
+Console.Write("Unique words: [ ");
+Console.Write(string.Join(", ", uniqueWords));
+Console.Write(" ]");
+
+//3. A program that reverses a provided string 
+
+string inputString3 = "Reversed string!";
+StringBuilder ReverseString(string input)
 {
-    Console.WriteLine($"The letter {charToCount} appears {charCount} times in the array. " +
-         $"This letter makes up less than 25% of the total number of characters.");
+    StringBuilder reversedString = new StringBuilder();
+
+    for (int i = input.Length - 1; i >= 0; i--)
+    {
+        reversedString.Append(input[i]);
+    }
+
+    return reversedString;
 }
+
+StringBuilder reversedString = ReverseString(inputString3);
+
+Console.WriteLine("");
+Console.WriteLine("\nExercise #3");
+Console.WriteLine("Reversed string: " + reversedString);
+
+/* 4. A program that finds the longest unbroken word in a string and prints it.
+ * For example, the string "Tiptoe through the tulips" would print "through".
+ * If there are multiple words tied for greatest length, print the last one */
+
+string inputString4 = "Tiptoe through the tulips";
+string FindLongestWord(string input)
+{
+    string[] words = input.Split(new char[] { ' ' });
+    string longestWord = "";
+
+    for (int i = 0; i < words.Length; i++)
+    {
+        string word = words[i];
+
+        if (word.Length >= longestWord.Length)
+        {
+            longestWord = word;
+        }
+    }
+
+    return longestWord;
+}
+
+string longestWord = FindLongestWord(inputString4);
+
+Console.WriteLine("");
+Console.WriteLine("\nExercise #3");
+Console.WriteLine("Longest unbroken word: " + longestWord);
+
+/*
+ * Research and employ the StringBuilder class and explain its advantages or disadvantages over Strings.
+ * 
+ * ADVANTAGES:
+ * 1. Mutable: We can modify its content without creating a new object each time. This is particularly useful 
+ * when you need to perform multiple concatenations or modifications to a string.
+ * 2. More efficient when dealing with large amounts of string concatenation.
+ * 3. `StringBuilder` provides methods such as `Append` and `Insert` that allow you to efficiently add or insert 
+ * content into the existing string without creating intermediate strings. This can be beneficial when building strings 
+ * dynamically or when performing string manipulations.
+ * 
+ * DISADVANTAGES:
+ * 1. Not Suitable for All String Operations. For simple scenarios involving a small number of string manipulations,
+ * `string` class can be more concise and easier to read.
+ * 2. Using `StringBuilder` involves method chaining and calls to specific methods like `Append` and `Insert`. 
+ * This can make the code slightly more complex compared to simple string concatenation using the `+` operator.
+ * 
+ */
