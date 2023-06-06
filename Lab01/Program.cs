@@ -1,151 +1,110 @@
-﻿// ---------- LABORATORIO 02 - DEYNNI ALMAZAN ---------------------------------
+﻿// ---------- LABORATORIO 03 - DEYNNI ALMAZAN ---------------------------------
+
+/* 
+    1. We have a list of integers where elements appear either once or twice. 
+    Find the elements that appeared twice in O(n) time. 
+    Example: {1, 2, 3, 4, 7, 9, 2, 4} returns '{2, 4}
+*/
 
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 
-/*1. A program that produces an array of all of the characters that appear 
- * more than once in a string.For example, the string “Programmatic Python”
- * would result in the array ['p','r','o','a','m','t']. */
+List<int> nums = new List<int> { 1, 2, 3, 4, 7, 9, 2, 4 };
 
-string inputString = "Programmatic Python";
-
-char[] GetRepeatedCharacters(string input)
+//Using HashSet to find duplicates 
+List<int> FindDuplicates(List<int> nums)
 {
-    HashSet<char> uniqueCharacters = new HashSet<char>(); //HashSet create a collection of unique data
-    HashSet<char> repeatedCharacters = new HashSet<char>();
+    List<int> duplicates = new List<int>();
+    HashSet<int> set = new HashSet<int>();
 
-    for (int i = 0; i < input.Length; i++)
+    foreach (int num in nums)
     {
-        char c = char.ToLower(input[i]);
-
-        if (!uniqueCharacters.Contains(c))
+        if (!set.Add(num))
         {
-            uniqueCharacters.Add(c);
-        }
-        else if (!repeatedCharacters.Contains(c))
-        {
-            repeatedCharacters.Add(c);
+            duplicates.Add(num);
         }
     }
 
-    return repeatedCharacters.ToArray();
+    return duplicates;
 }
+
+
+List<int> listDuplicates = FindDuplicates(nums);
 
 Console.WriteLine("Exercise #1");
-Console.Write("Repeated characters: [ ");
-char[] repeatedCharacters = GetRepeatedCharacters(inputString);
-Console.Write(string.Join(", ", repeatedCharacters));
-Console.Write(" ]");
+Console.Write("The numbers that appeared twice in the provided array are: ");
+Console.WriteLine(string.Join(", ", listDuplicates)); // Output: 2, 4
+
+/*  
+    2. We have two sorted int arrays which could be with different sizes. 
+    We need to merge them in a third array while keeping this 
+    result array sorted. Can you do that in O(n) time? Don't use any extra 
+    structures like Sets or Dictionaries.
+    Example: {{1, 2, 3, 4, 5}, {2, 5, 7, 9, 13}} returns {1, 2, 2, 3, 4, 5, 5, 7, 9, 13}
+*/
 
 
-/* 2. A program returns an array of strings that are unique words found in the argument.
- * For example, the string “To be or not to be” returns ["to","be","or","not"].*/
-
-
-string inputString2 = "To be or not to be";
-string[] GetUniqueWords(string input)
+List<int> MergeSortedArrays(List<int> arr1, List<int> arr2)
 {
-    List<string> words = new List<string>();
-    StringBuilder currentWord = new StringBuilder();
+    List<int> merged = new List<int>();
+    int i = 0;
+    int j = 0;
 
-    for (int i = 0; i < input.Length; i++)
+    while (i < arr1.Count && j < arr2.Count)
     {
-        char c = input[i];
-
-        if (char.IsLetter(c))
+        if (arr1[i] <= arr2[j])
         {
-            currentWord.Append(c);
+            merged.Add(arr1[i]);
+            i++;
         }
-        else if (currentWord.Length > 0)
+        else
         {
-            words.Add(currentWord.ToString());
-            currentWord.Clear();
+            merged.Add(arr2[j]);
+            j++;
         }
     }
 
-    if (currentWord.Length > 0)
+    while (i < arr1.Count)
     {
-        words.Add(currentWord.ToString());
+        merged.Add(arr1[i]);
+        i++;
     }
 
-    return words.Distinct().ToArray();
+    while (j < arr2.Count)
+    {
+        merged.Add(arr2[j]);
+        j++;
+    }
+
+    return merged;
 }
 
-string[] uniqueWords = GetUniqueWords(inputString2.ToLower());
 
-Console.WriteLine("");
+List<int> arr1 = new List<int> { 1, 2, 3, 4, 5 };
+List<int> arr2 = new List<int> { 2, 5, 7, 9, 13 };
+List<int> merged = MergeSortedArrays(arr1, arr2);
+
 Console.WriteLine("\nExercise #2");
-Console.Write("Unique words: [ ");
-Console.Write(string.Join(", ", uniqueWords));
-Console.Write(" ]");
+Console.Write("Sorted array that includes the two provided arrays: ");
+Console.WriteLine(string.Join(", ", merged)); // Output: 1, 2, 2, 3, 4, 5, 5, 7, 9, 13
 
-//3. A program that reverses a provided string 
 
-string inputString3 = "Reversed string!";
-StringBuilder ReverseString(string input)
-{
-    StringBuilder reversedString = new StringBuilder();
-
-    for (int i = input.Length - 1; i >= 0; i--)
-    {
-        reversedString.Append(input[i]);
-    }
-
-    return reversedString;
-}
-
-StringBuilder reversedString = ReverseString(inputString3);
-
-Console.WriteLine("");
-Console.WriteLine("\nExercise #3");
-Console.WriteLine("Reversed string: " + reversedString);
-
-/* 4. A program that finds the longest unbroken word in a string and prints it.
- * For example, the string "Tiptoe through the tulips" would print "through".
- * If there are multiple words tied for greatest length, print the last one */
-
-string inputString4 = "Tiptoe through the tulips";
-string FindLongestWord(string input)
-{
-    string[] words = input.Split(new char[] { ' ' });
-    string longestWord = "";
-
-    for (int i = 0; i < words.Length; i++)
-    {
-        string word = words[i];
-
-        if (word.Length >= longestWord.Length)
-        {
-            longestWord = word;
-        }
-    }
-
-    return longestWord;
-}
-
-string longestWord = FindLongestWord(inputString4);
-
-Console.WriteLine("");
-Console.WriteLine("\nExercise #3");
-Console.WriteLine("Longest unbroken word: " + longestWord);
 
 /*
- * Research and employ the StringBuilder class and explain its advantages or disadvantages over Strings.
- * 
- * ADVANTAGES:
- * 1. Mutable: We can modify its content without creating a new object each time. This is particularly useful 
- * when you need to perform multiple concatenations or modifications to a string.
- * 2. More efficient when dealing with large amounts of string concatenation.
- * 3. `StringBuilder` provides methods such as `Append` and `Insert` that allow you to efficiently add or insert 
- * content into the existing string without creating intermediate strings. This can be beneficial when building strings 
- * dynamically or when performing string manipulations.
- * 
- * DISADVANTAGES:
- * 1. Not Suitable for All String Operations. For simple scenarios involving a small number of string manipulations,
- * `string` class can be more concise and easier to read.
- * 2. Using `StringBuilder` involves method chaining and calls to specific methods like `Append` and `Insert`. 
- * This can make the code slightly more complex compared to simple string concatenation using the `+` operator.
- * 
- */
+   3. Given an integer, reverse the digits of that integer, e. g. input is 3415, output is 5143. 
+    What is the time complexity of your solution?
+*/
+
+int num = 550;
+
+string numString = num.ToString();
+char[] numArray = numString.ToCharArray();
+
+Array.Reverse(numArray);
+
+string reversedString = new string(numArray);
+int reversedNum = int.Parse(reversedString);
+
+Console.WriteLine("\nExercise #3");
+Console.WriteLine($"Reversed number: {reversedNum}");
+Console.WriteLine("The time complexity is O(n), where n is the number of digits in the given integer.");
